@@ -1,4 +1,5 @@
-
+import os
+import subprocess
 
 class Cisco_Packet_Tracer:
 
@@ -8,8 +9,9 @@ class Cisco_Packet_Tracer:
         self.cursor = self.get_cursor()
 
 
-    def make_conn(self, dest) -> 'connection':
-        pass
+    def make_conn(self, dir) -> 'connection':
+        os.chdir('D:')
+        subprocess.call([dir])
 
 
     def get_cursor(self):
@@ -17,3 +19,6 @@ class Cisco_Packet_Tracer:
         if not self.connection:
             raise TypeError
 
+if __name__ == '__main__':
+    cpt = Cisco_Packet_Tracer('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
+    print(cpt.connection)
