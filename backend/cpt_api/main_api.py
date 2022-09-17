@@ -7,8 +7,8 @@ class Cisco_Packet_Tracer:
 
     def __init__(self, directory) -> None:
         self.directory = directory
-        self.is_opened = self.open_window(directory)
         self.os = self.get_os()
+        self.is_opened = self.open_window(directory)
         print(f'''===============window opened successfully==================
 window in opened state: {self.is_opened}
 current os is: {self.os}
