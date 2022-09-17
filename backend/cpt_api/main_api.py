@@ -1,5 +1,6 @@
 import os
 import psutil
+import platform
 
 
 class Cisco_Packet_Tracer:
@@ -7,26 +8,38 @@ class Cisco_Packet_Tracer:
     def __init__(self, directory) -> None:
         self.directory = directory
         self.is_opened = self.open_window(directory)
+        self.os = self.get_os()
         print(f'''===============window opened successfully==================
-window in opened state: {self.is_opened}''')
+window in opened state: {self.is_opened}
+current os is: {self.os}
+''')
 
     def open_window(self, directory):
+        
+        if self.os == 'Windows':
+            if os.getcwd()[0] != self.directory[0]: #  check if the current directory is the directory where's the program 
+                print(f"changing directory to: {self.directory[0:2]}")
+                os.chdir(self.directory[0:2])
 
-        if os.getcwd()[0] != self.directory[0]: #  check if the current directory is the directory where's the program 
-            print(f"changing directory to: {self.directory[0:2]}")
-            os.chdir(self.directory[0:2])
-
-        try:
-            if not self.packet_tracer_is_running():
-                os.startfile(directory)
+            try:
+                if not self.packet_tracer_is_running():
+                    os.startfile(directory)
+                    return True
+                
                 return True
-            
-            return True
 
-        except FileNotFoundError as e:
-            print(
-                '===============issue with the path check if its correct================')
-            raise e
+            except FileNotFoundError as e:
+                print(
+                    '===============issue with the path check if its correct================'
+                    )
+                raise e
+
+        if self.os == 'Darwin':
+            pass
+
+
+    def get_os(self):
+        return platform.uname().system
 
     def packet_tracer_is_running(self):
         file_name = self.directory.split('\\')[-1]
@@ -52,4 +65,4 @@ class Screen(Cisco_Packet_Tracer):
 
 
 if __name__ == '__main__':
-    cpt = Screen('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
+    cpt = Screen('//')
