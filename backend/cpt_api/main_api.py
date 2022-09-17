@@ -1,28 +1,24 @@
+from fileinput import filename
 import os
+import psutil
 
 
-class Screen:
+class Cisco_Packet_Tracer:
 
-    def __init__(self) -> None:
+    def __init__(self, directory) -> None:
+        self.directory = directory
+        self.is_opened = self.open_window(directory)
+        print(f'''===============window opened successfully==================
+window in opened state: {self.is_opened}''')
 
-        self.resolution = self.define_screen_size()
-
-    def define_screen_size(self):
-        return 'resolution'
-
-
-class Cisco_Packet_Tracer(Screen):
-
-    def __init__(self, connection) -> None:
-        super().__init__()
-        self.is_opened = self.make_conn(connection)
-        self.window = self.get_window()
-
-    def make_conn(self, dir) -> 'connection':
+    def open_window(self, directory):
         os.chdir('D:')
 
         try:
-            os.startfile(dir)
+            if not self.packet_tracer_is_running():
+                os.startfile(directory)
+                return True
+            
             return True
 
         except FileNotFoundError as e:
@@ -30,16 +26,24 @@ class Cisco_Packet_Tracer(Screen):
                 '===============issue with the path check if its correct================')
             raise e
 
-    def get_window(self):
+    def packet_tracer_is_running(self):
+        file_name = self.directory.split('\\')[-1]
+        return file_name in (p.name() for p in psutil.process_iter())
 
-        if not self.is_opened:
-            raise TypeError
 
-        print('===============window opened successfully==================')
-        print(self.resolution)
+class Screen(Cisco_Packet_Tracer):
+
+    def __init__(self, directory) -> None:
+        super().__init__(directory)
+        self.resolution = self.define_screen_size(directory)
+        print(f'window resolution: {self.resolution}')
+
+    def define_screen_size(self, directory):
+
+        if self.is_opened:
+
+            return 'resolution'
 
 
 if __name__ == '__main__':
-    cpt = Cisco_Packet_Tracer(
-        'D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
-    print(f"window in opened state:\n{cpt.is_opened}")
+    cpt = Screen('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
