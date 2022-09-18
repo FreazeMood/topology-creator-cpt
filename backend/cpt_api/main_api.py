@@ -35,7 +35,20 @@ current os is: {self.os}
                 raise e
 
         if self.os == 'Darwin':
-            pass
+            
+            try:
+                if not self.packet_tracer_is_running():
+                    app = self.directory.split('/')[-1]
+                    os.system(f"open -a '{app}'")
+                    return True
+                
+                return True
+
+            except FileNotFoundError as e:
+                print(
+                    '===============issue with the path check if its correct================'
+                    )
+                raise e
 
 
     def get_os(self):
@@ -65,4 +78,4 @@ class Screen(Cisco_Packet_Tracer):
 
 
 if __name__ == '__main__':
-    cpt = Screen('//')
+    cpt = Screen('/Applications/Cisco Packet Tracer 8.2.0/Cisco Packet Tracer 8.2.app')
