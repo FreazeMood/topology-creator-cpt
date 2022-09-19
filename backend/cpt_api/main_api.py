@@ -1,6 +1,7 @@
 import os
 import psutil
 import platform
+import pyautogui as pya
 
 
 class Cisco_Packet_Tracer:
@@ -16,7 +17,7 @@ current os is: {self.os}
 
     def open_window(self, directory):
         
-        if self.os == 'Windows':
+        if self.os in ('Windows', 'win32', 'cygwin'): #  adaptation for windows
             if os.getcwd()[0] != self.directory[0]: #  check if the current directory is the directory where's the program 
                 print(f"changing directory to: {self.directory[0:2]}")
                 os.chdir(self.directory[0:2])
@@ -34,7 +35,7 @@ current os is: {self.os}
                     )
                 raise e
 
-        if self.os == 'Darwin':
+        if self.os in ('Mac', 'Darwin', 'Os2', 'Os2emx'): #  adaptation for macOS
             
             try:
                 if not self.packet_tracer_is_running():
@@ -67,14 +68,16 @@ class Screen(Cisco_Packet_Tracer):
         self.window_on_screen = self.check_if_window_on_screen()
         print(f'window resolution: {self.resolution}')
 
-    def define_screen_size(self, directory):
+    def define_screen_size(self, dir):
 
-        if self.is_opened:
-
-            return 'resolution'
+        if self.is_opened and self.window_on_screen:
+            return pya.size()
+        
+        raise TypeError
 
     def check_if_window_on_screen(self):
-        pass
+        
+        return True #  temp for test
 
 
 if __name__ == '__main__':
