@@ -39,7 +39,8 @@ current os is: {self.os}
                 raise e
 
         if self.os in self.mac_os_names: #  adaptation for macOS
-            
+            # @TODO: 
+            #       raise a file not found error if system wasnt executed 
             try:
                 if not self.packet_tracer_is_running():
                     app = self.directory.split('/')[-1]
@@ -58,7 +59,10 @@ current os is: {self.os}
     def get_os(self):
         return platform.uname().system
 
-    def packet_tracer_is_running(self):
+    def packet_tracer_is_running(self) -> bool:
+        """ 
+        check if there is a proccess with the needed name
+        """
         file_name = self.directory.split('\\')[-1]
         return file_name in (p.name() for p in psutil.process_iter())
 
@@ -69,6 +73,7 @@ class Screen(Cisco_Packet_Tracer):
         super().__init__(directory)
         self.window_on_screen = self.check_if_window_on_screen()
         self.resolution = self.define_screen_size(directory)
+        self.window_resolution = self.find_window_resolution()
         print(f'window resolution: {self.resolution}')
         print(f'cisco-packet-tracer is opened: {self.window_on_screen}')
 
@@ -92,6 +97,9 @@ class Screen(Cisco_Packet_Tracer):
                 self.check_if_window_on_screen() 
 
             return True
+
+    def find_window_resolution():
+        pass
 
 if __name__ == '__main__':
     cpt = Screen('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
