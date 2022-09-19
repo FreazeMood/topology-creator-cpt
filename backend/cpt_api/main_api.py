@@ -15,9 +15,12 @@ window in opened state: {self.is_opened}
 current os is: {self.os}
 ''')
 
+    win_os_names = ('Windows', 'win32', 'cygwin')
+    mac_os_names = ('Mac', 'Darwin', 'Os2', 'Os2emx')
+
     def open_window(self, directory):
         
-        if self.os in ('Windows', 'win32', 'cygwin'): #  adaptation for windows
+        if self.os in self.win_os_names: #  adaptation for windows
             if os.getcwd()[0] != self.directory[0]: #  check if the current directory is the directory where's the program 
                 print(f"changing directory to: {self.directory[0:2]}")
                 os.chdir(self.directory[0:2])
@@ -35,7 +38,7 @@ current os is: {self.os}
                     )
                 raise e
 
-        if self.os in ('Mac', 'Darwin', 'Os2', 'Os2emx'): #  adaptation for macOS
+        if self.os in self.mac_os_names: #  adaptation for macOS
             
             try:
                 if not self.packet_tracer_is_running():
@@ -64,21 +67,31 @@ class Screen(Cisco_Packet_Tracer):
 
     def __init__(self, directory) -> None:
         super().__init__(directory)
-        self.resolution = self.define_screen_size(directory)
         self.window_on_screen = self.check_if_window_on_screen()
+        self.resolution = self.define_screen_size(directory)
         print(f'window resolution: {self.resolution}')
+        print(f'cisco-packet-tracer is opened: {self.window_on_screen}')
 
     def define_screen_size(self, dir):
 
         if self.is_opened and self.window_on_screen:
-            return pya.size()
+            return f'{pya.size().width} * {pya.size().height}'
         
         raise TypeError
 
     def check_if_window_on_screen(self):
-        
-        return True #  temp for test
 
+        if self.os in self.win_os_names:
+
+            import win32gui
+            window = win32gui.GetForegroundWindow()
+            active_window_name = win32gui.GetWindowText(window)
+            
+            if not active_window_name == 'Cisco Packet Tracer':
+                pya.hotkey('alt', 'tab')
+                self.check_if_window_on_screen() 
+
+            return True
 
 if __name__ == '__main__':
-    cpt = Screen('/Applications/Cisco Packet Tracer 8.2.0/Cisco Packet Tracer 8.2.app')
+    cpt = Screen('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
