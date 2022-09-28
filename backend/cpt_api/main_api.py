@@ -2,6 +2,7 @@ import os
 import psutil
 import platform
 import pyautogui as pya
+import time
 
 
 class Cisco_Packet_Tracer:
@@ -67,7 +68,7 @@ current os is: {self.os}
         return file_name in (p.name() for p in psutil.process_iter())
 
 
-class Screen(Cisco_Packet_Tracer):
+class Window(Cisco_Packet_Tracer):
 
     def __init__(self, directory) -> None:
         super().__init__(directory)
@@ -82,18 +83,22 @@ class Screen(Cisco_Packet_Tracer):
         
     def check_if_window_on_screen(self):
 
-        if self.os in self.win_os_names:
+        if self.os in self.win_os_names and self.packet_tracer_is_running:
 
             import win32gui
-            window = win32gui.GetForegroundWindow()
-            active_window_name = win32gui.GetWindowText(window)
+            import ctypes
+            foreground_window = win32gui.GetForegroundWindow()
+            active_window_name = win32gui.GetWindowText(foreground_window)
+            self.window = win32gui.FindWindow(None ,'Cisco Packet Tracer')
             
             if not active_window_name == 'Cisco Packet Tracer':
-                pya.hotkey('alt', 'tab')
-                return self.check_if_window_on_screen() 
+                user32 = ctypes.windll.user32
+                user32.SetForegroundWindow(self.window)
 
-            self.window = win32gui.FindWindow(None ,active_window_name)
-            return True
+                if user32.IsIconic(self.window):
+                    user32.ShowWindow(self.window, 9)
+
+            return True  
 
     def find_window_resolution(self):
 
@@ -112,4 +117,4 @@ class Screen(Cisco_Packet_Tracer):
 
 
 if __name__ == '__main__':
-    cpt = Screen('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
+    cpt = Window('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
