@@ -40,7 +40,7 @@ current os is: {self.os}
 
         if self.os in self.mac_os_names: #  adaptation for macOS
             # @TODO: 
-            #       raise a file not found error if system wasnt executed 
+            #       raise a file not found error if os.system wasnt executed 
             try:
                 if not self.packet_tracer_is_running():
                     app = self.directory.split('/')[-1]
@@ -72,18 +72,15 @@ class Screen(Cisco_Packet_Tracer):
     def __init__(self, directory) -> None:
         super().__init__(directory)
         self.window_on_screen = self.check_if_window_on_screen()
-        self.resolution = self.define_screen_size(directory)
+        self.resolution = self.define_screen_size()
         self.window_resolution = self.find_window_resolution()
-        print(f'window resolution: {self.resolution}')
+        print(f'screen resolution is: {self.resolution}')
+        print(f'window position and size: {self.window_resolution}')
         print(f'cisco-packet-tracer is opened: {self.window_on_screen}')
 
-    def define_screen_size(self, dir):
-
-        if self.is_opened and self.window_on_screen:
-            return f'{pya.size().width} * {pya.size().height}'
+    def define_screen_size(self):
+        return f'{pya.size().width} * {pya.size().height}'
         
-        raise TypeError
-
     def check_if_window_on_screen(self):
 
         if self.os in self.win_os_names:
@@ -94,12 +91,28 @@ class Screen(Cisco_Packet_Tracer):
             
             if not active_window_name == 'Cisco Packet Tracer':
                 pya.hotkey('alt', 'tab')
-                self.check_if_window_on_screen() 
+                return self.check_if_window_on_screen() 
 
+            self.window = win32gui.FindWindow(None ,active_window_name)
+            print(win32gui.GetWindowRect(self.window))
             return True
 
-    def find_window_resolution():
-        pass
+    def find_window_resolution(self):
+
+        if self.os in self.win_os_names:
+
+            import win32gui
+            print(self.window)
+            rect = win32gui.GetWindowRect(self.window)
+            x = rect[0]
+            y = rect[1]
+            w = rect[2] - x
+            h = rect[3] - y
+            print("Window %s:" % win32gui.GetWindowText(self.window))
+            print("\tLocation: (%d, %d)" % (x, y))
+            print("\t    Size: (%d, %d)" % (w, h))
+            return {"location": (x, y), "size": (w, h)}
+
 
 if __name__ == '__main__':
     cpt = Screen('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
