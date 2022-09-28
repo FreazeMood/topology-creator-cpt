@@ -72,11 +72,10 @@ class Screen(Cisco_Packet_Tracer):
     def __init__(self, directory) -> None:
         super().__init__(directory)
         self.window_on_screen = self.check_if_window_on_screen()
-        self.resolution = self.define_screen_size()
-        self.window_resolution = self.find_window_resolution()
-        print(f'screen resolution is: {self.resolution}')
-        print(f'window position and size: {self.window_resolution}')
         print(f'cisco-packet-tracer is opened: {self.window_on_screen}')
+        self.resolution = self.define_screen_size()
+        print(f'screen resolution is: {self.resolution}')
+        self.window_resolution = self.find_window_resolution()
 
     def define_screen_size(self):
         return f'{pya.size().width} * {pya.size().height}'
@@ -94,7 +93,6 @@ class Screen(Cisco_Packet_Tracer):
                 return self.check_if_window_on_screen() 
 
             self.window = win32gui.FindWindow(None ,active_window_name)
-            print(win32gui.GetWindowRect(self.window))
             return True
 
     def find_window_resolution(self):
@@ -102,13 +100,12 @@ class Screen(Cisco_Packet_Tracer):
         if self.os in self.win_os_names:
 
             import win32gui
-            print(self.window)
             rect = win32gui.GetWindowRect(self.window)
             x = rect[0]
             y = rect[1]
             w = rect[2] - x
             h = rect[3] - y
-            print("Window %s:" % win32gui.GetWindowText(self.window))
+            print("The window is %s:" % win32gui.GetWindowText(self.window))
             print("\tLocation: (%d, %d)" % (x, y))
             print("\t    Size: (%d, %d)" % (w, h))
             return {"location": (x, y), "size": (w, h)}
