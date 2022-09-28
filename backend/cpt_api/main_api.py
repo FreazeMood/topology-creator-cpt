@@ -77,9 +77,19 @@ class Window(Cisco_Packet_Tracer):
         self.window_resolution = self.find_window_resolution()
 
     def define_screen_size(self):
+        
+        """
+        returns the resolution of the main screen
+        """
+        
         return f'{pya.size().width} * {pya.size().height}'
 
-    def check_if_window_on_screen(self):
+    def check_if_window_on_screen(self) -> bool:
+       
+        """
+        checks if the window of the application is on the screen,
+        if it's not tries to open the window on the screen.
+        """
 
         if self.os in self.win_os_names and self.packet_tracer_is_running:
 
@@ -102,6 +112,11 @@ class Window(Cisco_Packet_Tracer):
 
     def find_window_resolution(self):
 
+        """
+        finds the resolution and the position of the application.
+        (the window has to be opened to make this work)
+        """
+
         if self.os in self.win_os_names:
 
             import win32gui
@@ -118,9 +133,9 @@ class Window(Cisco_Packet_Tracer):
                 return {"location": (x, y), "size": (w, h)}
             
             except pywintypes.error:
-                time.sleep(3)
-                self.check_if_window_on_screen()
-                self.find_window_resolution()
+                time.sleep(3) # give 3 secs to launch
+                self.check_if_window_on_screen() # basiclly runs again to check if the window has launched
+                self.find_window_resolution() # try to find the position and size again
 
 
 if __name__ == '__main__':
