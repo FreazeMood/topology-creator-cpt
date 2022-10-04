@@ -1,5 +1,5 @@
 from interface import Interface
-from constants import ROUTRER_X_RATIO, ROUTRER_Y_RATIO
+from constants import ROUTER_X_RATIO, ROUTER_Y_RATIO
 import pyautogui as pya
 
 class Router(Interface):
@@ -25,8 +25,8 @@ class Router(Interface):
     
     def define_router_location(self):
 
-        width = self.resolution['x'] // ROUTRER_X_RATIO
-        height = self.resolution['y'] // ROUTRER_Y_RATIO
+        width = self.resolution['x'] // ROUTER_X_RATIO
+        height = self.resolution['y'] // ROUTER_Y_RATIO
         return {'x': width, 'y': height}
 
 if __name__ == '__main__':
