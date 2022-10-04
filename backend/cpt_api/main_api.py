@@ -82,7 +82,7 @@ class Window(Cisco_Packet_Tracer):
         returns the resolution of the main screen
         """
         
-        return f'{pya.size().width} * {pya.size().height}'
+        return {'x': pya.size().width, 'y': pya.size().height}
 
     def check_if_window_on_screen(self) -> bool:
        
