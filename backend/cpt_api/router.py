@@ -18,17 +18,22 @@ class Router(Interface):
         else:
             raise TypeError
 
-        while qty > 0:
-            pya.moveTo(x=self.router_location['x'], y=self.router_location['y'])
-            pya.dragTo(x=1274, y=650, button='left')
-            qty -= 1 
-    
-    def define_router_location(self):
+        router_counter = 0
+        initial_qty = qty
 
+        while initial_qty > 0:
+            router_counter += 1
+            pya.moveTo(x=self.router_location['x'], y=self.router_location['y'])
+            x_target, y_target = (self.resolution['x'] // (qty * 1.35)) * router_counter, (self.resolution['y'] // 4)
+            pya.dragTo(x=x_target, y=y_target, button='left')
+            initial_qty -= 1 
+
+    def define_router_location(self):
         width = self.resolution['x'] // ROUTER_X_RATIO
         height = self.resolution['y'] // ROUTER_Y_RATIO
         return {'x': width, 'y': height}
 
+
 if __name__ == '__main__':
-    n = Router('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
-    n.take_and_put(2)
+    router = Router('D:\\pc shit\\Cisco Packet Tracer 8.0\\bin\\PacketTracer.exe')
+    router.take_and_put(7)
