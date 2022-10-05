@@ -127,9 +127,9 @@ class Window(Cisco_Packet_Tracer):
                 y = rect[1]
                 w = rect[2] - x
                 h = rect[3] - y
-                print("The window is %s:" % win32gui.GetWindowText(self.window))
-                print("\tLocation: (%d, %d)" % (x, y))
-                print("\t    Size: (%d, %d)" % (w, h))
+                print(f"The window is {win32gui.GetWindowText(self.window)}")
+                print(f"\tLocation: {(x, y)}")
+                print(f"\t    Size: {(w, h)}")
                 return {"location": (x, y), "size": (w, h)}
             
             except pywintypes.error:
