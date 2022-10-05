@@ -1,5 +1,8 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from interface import Interface
-from constants import ROUTER_X_RATIO, ROUTER_Y_RATIO
+from ratios import ROUTER_X_RATIO, ROUTER_Y_RATIO
 import pyautogui as pya
 
 
@@ -9,7 +12,7 @@ class Router(Interface):
         super().__init__(directory)
         self.router_location = self.find_icon_location(ROUTER_X_RATIO, ROUTER_Y_RATIO)
         
-    def take_and_put(self, qty):
+    def take_and_put(self, qty: int) -> None:
         super().take_and_put()
         router_counter = 0
         initial_qty = qty

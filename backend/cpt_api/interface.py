@@ -27,3 +27,8 @@ class Interface(Window):
 
         else:
             raise TypeError
+
+    def wire(self):
+        pass
+
+    
